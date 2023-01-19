@@ -1,0 +1,69 @@
+public class Dragon implements Comparable<Dragon> {  
+    private int id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически  
+    private String name; //Поле не может быть null, Строка не может быть пустой  
+    private long age; //Значение поля должно быть больше 0  
+    private int weight; //Значение поля должно быть больше 0  
+    private DragonType type; //Поле не может быть null  
+
+    
+    public int compareTo (Dragon anotherDragon) {
+	//реализация сравнения по полю id
+    }
+}
+
+public enum DragonType {
+    WATER,
+    UNDERGROUND,
+    AIR,
+    FIRE;
+}
+
+public class ListDragon extends ArrayList<Dragon> implements CollectionManager {
+    
+    public void init() {
+    // реализация автоматического заполнения значениями из файла
+    }
+
+}
+
+interface Reader {
+    String read();
+}
+
+public class ReaderJson implements Reader {
+    @ovveride
+    public String read() {
+	// реализация считывания текста с файла с помощью класса Scanner;
+    }
+
+}
+
+interface Writer {
+    void write();
+}
+
+public class WriterJson implements Writer {
+    @ovveride
+    public void write() {
+	//реализации записи текста в файл с помощью класса FileOutputReader
+    }
+}
+
+interface CollectionManager {
+	
+	// help
+	// info
+	// show
+	// add
+	// update id
+	// remove_by_id id
+	// clear
+	// save file_name
+	// execute_script file_name
+	// exit
+	// remove_at index
+	// add_if_min
+	// remove_greater
+}
+
+
