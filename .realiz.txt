@@ -3,7 +3,7 @@ public class Dragon implements Comparable<Dragon> {
     private String name; //Поле не может быть null, Строка не может быть пустой  
     private long age; //Значение поля должно быть больше 0  
     private int weight; //Значение поля должно быть больше 0  
-    private DragonType type; //Поле не может быть null  
+    private Dragon.DragonType type; //Поле не может быть null
 
     
     public int compareTo (Dragon anotherDragon) {
@@ -11,18 +11,15 @@ public class Dragon implements Comparable<Dragon> {
     }
 }
 
-public enum DragonType {
+public enum Dragon.DragonType {
     WATER,
     UNDERGROUND,
     AIR,
     FIRE;
 }
 
-public class ListDragon extends ArrayList<Dragon> implements CollectionManager {
-    
-    public void init() {
-    // реализация автоматического заполнения значениями из файла
-    }
+public class ListDragon implements CollectionManager {
+    private ArrayList<Dragon> listDragon;
 
 }
 
@@ -50,20 +47,45 @@ public class WriterJson implements Writer {
 }
 
 interface CollectionManager {
-	
-	// help
-	// info
-	// show
 	// add
-	// update id
 	// remove_by_id id
 	// clear
-	// save file_name
-	// execute_script file_name
-	// exit
 	// remove_at index
-	// add_if_min
-	// remove_greater
 }
+
+interface UpdateCollection {
+    // update id
+    // add_if_min
+    // remove_greater
+}
+
+interface PrintInfoCollection {
+    // help
+    // info
+   	// show
+}
+
+interface FileManager.FileManager {
+    // save file_name
+    // execute_script file_name
+}
+
+interface Exit {
+    // exit
+}
+
+interface InitCollection {
+ public void init() {
+    // реализация автоматического заполнения значениями из файла
+    }
+}
+
+
+План действий:
+1. Добавить дополнительные классы для реализации интерфейсов коллекции
+, чтобы разгрузить класс ListDragon
+2. Изучить JSON
+3. Изучить Javadoc
+
 
 

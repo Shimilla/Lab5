@@ -44,10 +44,10 @@ public class Dragon {
     private String name; //Поле не может быть null, Строка не может быть пустой  
     private long age; //Значение поля должно быть больше 0  
     private int weight; //Значение поля должно быть больше 0  
-    private DragonType type; //Поле не может быть null  
+    private Dragon.DragonType type; //Поле не может быть null  
 }
 
-public enum DragonType {
+public enum Dragon.DragonType {
     WATER,
     UNDERGROUND,
     AIR,
@@ -61,6 +61,6 @@ public enum DragonType {
 * Параметризованные типы. Создание параметризуемых классов. Wildcard-параметры.
 * Классы-оболочки. Назначение, область применения, преимущества и недостатки. Автоупаковка и автораспаковка.
 * Потоки ввода-вывода в Java. Байтовые и символьные потоки. "Цепочки" потоков (Stream Chains).
-* Работа с файлами в Java. Класс `java.io.File`.
+* Работа с файлами в Java. Класс `java.io.FileManager`.
 * Пакет `java.nio` - назначение, основные классы и интерфейсы.
 * Утилита `javadoc`. Особенности автоматического документирования кода в Java.
