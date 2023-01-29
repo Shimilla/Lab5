@@ -4,13 +4,10 @@ import Dragon.CollectionManager;
 import Dragon.Dragon;
 import com.google.gson.Gson;
 
-import java.awt.*;
 import java.io.*;
-import java.lang.reflect.Type;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
+import java.util.List;
 
 public class FileManager {
 
@@ -20,14 +17,14 @@ public class FileManager {
             String str = gson.toJson(collection.getDragons());
             byte[] strToBytes = str.getBytes();
             fileOutputStream.write(strToBytes);
-            System.out.println("collection is successfully recorded");
+            System.out.println("collection is successfully recorded \n");
             System.out.println(str);
         } catch (NullPointerException n) {
             System.out.println("null");
         } catch (FileNotFoundException e) {
-            System.out.println("File not found, check path to file");
+            System.out.println("File not found, check path to file \n");
         } catch (IOException ex) {
-            System.out.println("Ошибка хз");
+            System.out.println("Ошибка хз \n");
         }
 
     }
@@ -36,18 +33,21 @@ public class FileManager {
         // коллекция должна заполняться значениями из файла json
         String fileGson = null;
         try (FileReader fileReader = new FileReader(fileName);
-             BufferedReader bufferedReader = new BufferedReader(fileReader)){
+             BufferedReader bufferedReader = new BufferedReader(fileReader)) {
             while (bufferedReader.ready()) {
                 fileGson = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
-            System.out.println("File not found, check path to file");
+            System.out.println("File not found, check path to file \n");
         } catch (IOException ex) {
-            System.out.println("Hard exception");
+            System.out.println("Hard exception \n");
         }
 
         Gson gson = new Gson();
         Dragon[] dragons = gson.fromJson(fileGson, Dragon[].class);
-        collectionManager.initDragons(Arrays.asList(dragons));
+        List<Dragon> tempArr = Arrays.asList(dragons);
+        List<Dragon> dragonList = new ArrayList<>(tempArr);
+        collectionManager.initDragons(dragonList);
+        collectionManager.initIdCollection();
     }
 }

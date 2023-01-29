@@ -2,10 +2,17 @@ package Util.CollectionUtil;
 
 import Dragon.*;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 public class UpdateCollection {
     public static void update(CollectionManager collectionManager, int id, Dragon dragon) {
-        collectionManager.getDragons().add(id, dragon);
-        System.out.printf("Collection element with index %d was updated", id);
+        collectionManager.remove_by_id(id);
+        dragon.setId(id);
+        collectionManager.addDragon(dragon);
+        System.out.printf("Collection element with index %d was updated \n", id);
     }
 
     public static void add_if_min(CollectionManager collectionManager, Dragon dragon) {
@@ -25,17 +32,23 @@ public class UpdateCollection {
             collectionManager.addDragon(dragon);
             System.out.printf("The element %s was successfully added \n", dragon.getClass() + " " + dragon.getName());
         } else {
-            System.out.printf("The element could not be added. The value of the element to be added must be smaller than the smallest element in the collection.");
+            System.out.printf("The element could not be added. The value of the element to be added must be smaller than the smallest element in the collection. \n");
         }
     }
 
     public static void remove_greater(CollectionManager collectionManager, Dragon dragon) {
-        for (Dragon drag : collectionManager.getDragons()) {
-            if (drag.getAge() > dragon.getAge()) {
-                collectionManager.getDragons().remove(drag);
-                System.out.printf("Element %s was deleted", drag.getName());
+        List<Dragon> updateList = new ArrayList<>();
+
+        for (Dragon dragonOld : collectionManager.getDragons()) {
+            if (dragonOld.getAge() < dragon.getAge()) {
+                updateList.add(dragonOld);
             }
         }
+        collectionManager.clear();
+        collectionManager.initDragons(updateList);
+        System.out.println("the following items remain in the collection: \n");
+        PrintInfoCollection.show(collectionManager);
+        System.out.println();
     }
 
 }

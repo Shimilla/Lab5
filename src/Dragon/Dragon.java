@@ -7,17 +7,33 @@ public class Dragon implements Comparable<Dragon>{
     private int weight; //Значение поля должно быть больше 0
     private DragonType type; //Поле не может быть null
 
-    public Dragon(int id, String name, long age, int weight, DragonType type) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-        this.weight = weight;
-        this.type = type;
+    public Dragon(String name, long age, int weight, DragonType type) {
+
+        if (name == null || name.equals("")) {
+            throw new NullPointerException("the dragon must have a name \n");
+        } else {
+            this.name = name;
+        }
+        if (age <= 0) {
+            throw new IllegalArgumentException("the age must be greater than zero \n");
+        } else {
+            this.age = age;
+        }
+        if (weight <= 0) {
+            throw new IllegalArgumentException("the weight must be greater than zero \n");
+        } else {
+            this.weight = weight;
+        }
+        if (type == null) {
+            throw new IllegalArgumentException("the type of dragon must be selected from the list \n");
+        } else {
+            this.type = type;
+        }
     }
 
     @Override
     public int compareTo(Dragon dragon) {
-        return id - dragon.id;
+        return (int) (age - dragon.age);
     }
 
     @Override
@@ -33,10 +49,6 @@ public class Dragon implements Comparable<Dragon>{
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -69,5 +81,9 @@ public class Dragon implements Comparable<Dragon>{
 
     public void setType(DragonType type) {
         this.type = type;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
