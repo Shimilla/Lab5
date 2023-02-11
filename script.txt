@@ -1,0 +1,56 @@
+//method add
+add
+155
+Brodyaga
+111
+air
+
+add
+333
+oldPocan
+113
+fire
+
+//method help
+help
+
+//method info
+info
+
+// method show
+show
+
+// method update_id
+update_id
+2
+33
+newPocan
+222
+Water
+
+// method remove_by_id
+remove_by_id
+1
+
+// method add_if_min
+
+add_if_min
+21
+youngPocan
+222
+Air
+
+// method remove_greater
+remove_greater
+100
+sssss
+333
+Water
+
+// method remove_at
+remove_at
+1
+
+// method save
+save
+C:\IntelijIDEA\Laba5\script.2txt

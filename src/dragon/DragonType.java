@@ -1,4 +1,4 @@
-package Dragon;
+package dragon;
 
 public enum DragonType {
     WATER,
