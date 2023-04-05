@@ -6,7 +6,7 @@ import dragon.Dragon;
 import java.util.List;
 import java.util.Scanner;
 
-public class PrintInfoCollection {
+public class printInfoCollection {
 
 
     public void help() {
@@ -18,6 +18,8 @@ public class PrintInfoCollection {
                 - info : Display information about the collection \s
                
                 - show : Display all items in the collection \s
+                
+                - show_mine : show your dragon collection \s
                
                 - add : Add a new item to the collection \s
                
@@ -59,7 +61,7 @@ public class PrintInfoCollection {
         }
     }
 
-    public static void pressEnter() {
+    public void pressEnter() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Press 'Enter' to continue");
         while (!scanner.nextLine().equals("")) {

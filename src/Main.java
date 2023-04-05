@@ -2,28 +2,31 @@
  * Class Main
  */
 
-import console.Console;
-import console.ConsoleCreateDragon;
-import console.ConsoleFileManager;
-import console.ConsoleModernizeCollection;
-import dragon.*;
-import fileManager.FileManager;
+import DAO.Connect;
+import DAO.DragonsDAO;
+import Users.Registration;
+import console.*;
+import dragon.CollectionManager;
+import util.printInfoCollection;
 
-
-import java.io.File;
-import java.nio.file.Files;
-import java.util.*;
-//import Console.Console;
+import java.util.concurrent.Executors;
 
 public class Main {
     public static void main(String[] args) {
-
         CollectionManager dragons = new CollectionManager();
-                Console console = new Console(dragons,
-                new ConsoleCreateDragon(dragons),
-                new ConsoleModernizeCollection(dragons),
-                new ConsoleFileManager(dragons));
+        DragonsDAO dragonsDAO = new DragonsDAO();
+        Registration registration = new Registration();
 
+        Console console = new Console(dragons,
+                new ConsoleCreateDragon(dragons, dragonsDAO),
+                new ConsoleModernizeCollection(dragons, dragonsDAO),
+                new ConsoleFileManager(dragons),
+                new printInfoCollection(),
+                new Connect(),
+                registration,
+                new ConsoleUsersAuthorization(registration),
+                Executors.newFixedThreadPool(5)
+        );
         console.getStarted();
 
     }

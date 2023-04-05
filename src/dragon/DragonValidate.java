@@ -1,5 +1,7 @@
 package dragon;
 
+import Users.User;
+
 public class DragonValidate {
 
     public boolean isCorrectAge(long age) {
@@ -73,6 +75,7 @@ public class DragonValidate {
         try {
             if (id <= 0) {
                 System.out.println("The id must be a whole number greater than zero \n");
+                // добавить условие на проверку на своих драконов
             } else if (!collectionManager.getListId().contains(id)) {
                 System.out.println("ID was not found, check if the entered ID is correct \n");
             } else {
@@ -84,12 +87,12 @@ public class DragonValidate {
         return isCorrId;
     }
 
-    public boolean isCorrectIndex(int index, CollectionManager collectionManager) {
+    public boolean isCorrectIndex(int index, CollectionManager collectionManager, User user) {
         boolean isCorrectIndex = false;
         try {
             if (index <= 0) {
                 System.out.println("The index must be a whole number greater than zero \n");
-            } else if (index >= collectionManager.getDragons().size()) {
+            } else if (index >= collectionManager.getMyDragons(user).size()) {
                 System.out.println("ID was not found, check if the entered ID is correct \n");
             } else {
                 isCorrectIndex = true;
@@ -99,5 +102,4 @@ public class DragonValidate {
         }
         return isCorrectIndex;
     }
-
 }

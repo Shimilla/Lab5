@@ -1,5 +1,6 @@
 package console;
 
+import Users.User;
 import dragon.CollectionManager;
 import dragon.DragonType;
 import dragon.DragonValidate;
@@ -39,7 +40,7 @@ public abstract class ConsoleCollectionBuilder {
         return id;
     }
 
-    protected int getIndex(Scanner scIndex) {
+    protected int getIndex(Scanner scIndex, User user) {
         boolean isCorrectIndex = false;
         int index = 0;
         while (!isCorrectIndex) {
@@ -48,7 +49,7 @@ public abstract class ConsoleCollectionBuilder {
                 index = Integer.parseInt(scIndex.nextLine());
                 if (index <= 0) {
                     System.out.println("the index must be a whole number greater than zero \n");
-                } else if (index >= collectionManager.getDragons().size()) {
+                } else if (index > collectionManager.getMyDragons(user).size()) {
                     System.out.println("ID was not found, check if the entered ID is correct \n");
                 } else {
                     isCorrectIndex = true;

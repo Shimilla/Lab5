@@ -1,29 +1,62 @@
 package dragon;
 
-import util.PrintInfoCollection;
+import DAO.DragonsDAO;
+import Users.User;
+import util.printInfoCollection;
 
+import java.sql.Connection;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class CollectionManager {
     private final String dateInit = new Date().toString();
     private List<Dragon> dragons = new ArrayList<>();
-    private final PrintInfoCollection printInfoCollection = new PrintInfoCollection();
+    private final util.printInfoCollection printInfoCollection = new printInfoCollection();
+    private final DragonsDAO dragonsDAO = new DragonsDAO();
+    private final ReentrantLock reentrantLock = new ReentrantLock();
 
     public void addDragon(Dragon dragon) {
         dragons.add(dragon);
     }
 
     public void setDragon(int index, Dragon dragon) {
-        dragons.set(index,dragon);
+        dragons.set(index, dragon);
     }
 
-    public void clear () {
-        dragons.clear();
-        System.out.println("The collection has been purged \n");
+    public void clear(Connection connection, User user) {
+        if (dragonsDAO.isEmptyTableByUser(connection, user)) {
+            System.out.println("Your table has no entries \n");
+        } else {
+            if (dragonsDAO.clear(connection, user)) {
+                removeByOwnerId(user.getId());
+                System.out.println("The collection has been purged \n");
+            } else {
+                System.out.println("Database crash \n");
+            }
+        }
     }
 
-    public void remove_by_id (int id) {
+    private void removeByOwnerId(int ownerId) {
+        Iterator<Dragon> iterator = dragons.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().getOwner().getId() == ownerId) {
+                iterator.remove();
+            }
+        }
+    }
+
+    public ArrayList<Dragon> getMyDragons(User user) {
+        ArrayList<Dragon> myDragons = new ArrayList<>();
+        for (Dragon dragon : dragons) {
+            if (dragon.getOwner().getId() == user.getId()) {
+                myDragons.add(dragon);
+            }
+        }
+        return myDragons;
+    }
+
+    public void remove_by_id(int id) {
         int count = 0;
         Iterator<Dragon> iterator = dragons.iterator();
         while (iterator.hasNext()) {
@@ -39,12 +72,12 @@ public class CollectionManager {
         }
     }
 
-    public void remove_at (int index) {
+    public void remove_at(int index) {
         dragons.remove(index);
         System.out.printf("The dragon with the index %d has been deleted \n", index);
     }
 
-    public Dragon getDragon (int index) {
+    public Dragon getDragon(int index) {
         return dragons.get(index);
     }
 
@@ -64,15 +97,19 @@ public class CollectionManager {
         }
     }
 
-    public void initIdDragon(Dragon dragon) {
+    public void getIdFromDb(Dragon dragon, Connection connection) {
+        int id = dragonsDAO.getId(connection);
+        dragon.setId(id);
+    }
+
+    public void initIdDragon(Dragon dragon, Connection connection) {
         int maxId = 0;
         if (dragons.size() == 0) {
             maxId = 0;
         } else {
-            maxId = dragons.get(dragons.size()-1).getId();
+            maxId = dragonsDAO.getId(connection);
         }
         dragon.setId(maxId + 1);
-        System.out.printf("The object %s has changed its id to %d \n", dragon.getName(), dragon.getId());
     }
 
     public void help() {
@@ -80,12 +117,16 @@ public class CollectionManager {
     }
 
     public void info() {
+        reentrantLock.lock();
         printInfoCollection.info(getClass().getName(), dateInit, dragons.size());
+        reentrantLock.unlock();
     }
 
     public void show() {
+        reentrantLock.lock();
         List<Dragon> copy = new ArrayList<>(dragons);
         printInfoCollection.show(copy);
+        reentrantLock.unlock();
     }
 
     public void update(int id, Dragon dragon) {
@@ -108,41 +149,58 @@ public class CollectionManager {
         }
     }
 
-    public void add_if_min(Dragon dragon) {
-
-        if (dragons.isEmpty()) {
-            addDragon(dragon);
-            System.out.printf("The element %s was successfully added \n", dragon.getName());
-            System.out.println();
-        } else {
-            Collections.sort(dragons);
-            long min = dragons.get(0).getAge();
-
-            if (dragon.getAge() < min) {
+    public void add_if_min(Dragon dragon, Connection connection, User user) {
+        if (dragonsDAO.isEmptyTableByUser(connection, user)) {
+            if (dragonsDAO.insertDragon(dragon, connection)) {
                 addDragon(dragon);
+                System.out.printf("The element %s was successfully added \n", dragon.getName());
                 System.out.println();
+            } else {
+                System.out.println("Database crash \n");
+            }
+        } else {
+            ArrayList<Dragon> myDragons = getMyDragons(user);
+            Collections.sort(myDragons);
+            long min = myDragons.get(0).getAge();
+            if (dragon.getAge() < min) {
+                if (dragonsDAO.insertDragon(dragon, connection)) {
+                    addDragon(dragon);
+                    System.out.printf("The element %s was successfully added \n", dragon.getName());
+                    System.out.println();
+                } else {
+                    System.out.println("Database crash \n");
+                }
             } else {
                 System.out.println("The element could not be added. " +
                         "The value of the element to be added must be smaller than the smallest element in the collection.");
                 System.out.println();
             }
         }
-
     }
 
-    public void remove_greater(Dragon dragon) {
-        Collections.sort(dragons);
-        List<Dragon> updateList = new ArrayList<>();
-
-        for (Dragon dragonOld : dragons) {
-            if (dragonOld.getAge() <= dragon.getAge()) {
-                updateList.add(dragonOld);
+    public void remove_greater(Dragon dragon, Connection connection, User user) {
+        if (dragonsDAO.isEmptyTableByUser(connection, user)) {
+            System.out.println("You have an empty collection \n");
+            return;
+        } else {
+            Collections.sort(dragons);
+            List<Dragon> updateList = new ArrayList<>();
+            if (dragonsDAO.remove_greater(dragon, connection, user)) {
+                for (Dragon dragonOld : dragons) {
+                    if (dragonOld.getAge() <= dragon.getAge() || dragonOld.getOwner().getId() != dragon.getOwner().getId()) {
+                        updateList.add(dragonOld);
+                    }
+                }
+                initDragons(updateList);
+                System.out.println("the following items remain in the collection: \n");
+                show();
+                System.out.println();
+            } else {
+                System.out.println("Database crash \n");
             }
         }
-        initDragons(updateList);
-        System.out.println("the following items remain in the collection: \n");
-        show();
-        System.out.println();
+
+
     }
 
     public List<Integer> getListId() {
@@ -153,4 +211,12 @@ public class CollectionManager {
         return listId;
     }
 
+    public Dragon getDragonById(int id) {
+        for (Dragon dragon : dragons) {
+            if (dragon.getId() == id) {
+                return dragon;
+            }
+        }
+        return null;
+    }
 }
