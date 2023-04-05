@@ -1,0 +1,25 @@
+CREATE DATABASE application;
+
+CREATE TABLE dragons
+(
+    id SERIAL PRIMARY KEY,
+    name varchar(50) NOT NULL,
+    age bigint NOT NULL,
+    weight integer NOT NULL,
+    dragon_type varchar(30) NOT NULL,
+    owner_id integer NOT NULL
+);
+
+CREATE TABLE users 
+(
+    user_id SERIAL PRIMARY KEY,
+    name varchar(50) NOT NULL,
+    surname varchar(50) NOT NULL,
+    login varchar(50) NOT NULL,
+    hash_code text NOT NULL
+);
+
+ALTER TABLE dragons ADD FOREIGN KEY (owner_id) REFERENCES users(user_id); 
+
+
+пароль поменяй в классе Connect на нужный
