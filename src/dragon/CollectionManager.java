@@ -6,7 +6,6 @@ import util.printInfoCollection;
 
 import java.sql.Connection;
 import java.util.*;
-import java.util.concurrent.locks.ReentrantLock;
 
 
 public class CollectionManager {
@@ -14,7 +13,6 @@ public class CollectionManager {
     private List<Dragon> dragons = new ArrayList<>();
     private final util.printInfoCollection printInfoCollection = new printInfoCollection();
     private final DragonsDAO dragonsDAO = new DragonsDAO();
-    private final ReentrantLock reentrantLock = new ReentrantLock();
 
     public void addDragon(Dragon dragon) {
         dragons.add(dragon);
@@ -72,29 +70,12 @@ public class CollectionManager {
         }
     }
 
-    public void remove_at(int index) {
-        dragons.remove(index);
-        System.out.printf("The dragon with the index %d has been deleted \n", index);
-    }
-
-    public Dragon getDragon(int index) {
-        return dragons.get(index);
-    }
-
     public List<Dragon> getDragons() {
         return dragons;
     }
 
     public void initDragons(List<Dragon> dragons) {
         this.dragons = dragons;
-    }
-
-    public void initIdCollection() {
-        int i = 1;
-        for (Dragon dragon : dragons) {
-            dragon.setId(i++);
-            System.out.printf("The object %s has changed its id to %d \n", dragon.getName(), dragon.getId());
-        }
     }
 
     public void getIdFromDb(Dragon dragon, Connection connection) {
@@ -117,16 +98,12 @@ public class CollectionManager {
     }
 
     public void info() {
-        reentrantLock.lock();
         printInfoCollection.info(getClass().getName(), dateInit, dragons.size());
-        reentrantLock.unlock();
     }
 
     public void show() {
-        reentrantLock.lock();
         List<Dragon> copy = new ArrayList<>(dragons);
         printInfoCollection.show(copy);
-        reentrantLock.unlock();
     }
 
     public void update(int id, Dragon dragon) {

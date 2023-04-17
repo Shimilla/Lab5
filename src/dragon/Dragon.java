@@ -75,16 +75,8 @@ public class Dragon implements Comparable<Dragon> {
         return age;
     }
 
-    public void setAge(long age) {
-        this.age = age;
-    }
-
     public int getWeight() {
         return weight;
-    }
-
-    public void setWeight(int weight) {
-        this.weight = weight;
     }
 
     public void setId(int id) {

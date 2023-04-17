@@ -9,8 +9,6 @@ import console.*;
 import dragon.CollectionManager;
 import util.printInfoCollection;
 
-import java.util.concurrent.Executors;
-
 public class Main {
     public static void main(String[] args) {
         CollectionManager dragons = new CollectionManager();
@@ -24,10 +22,8 @@ public class Main {
                 new printInfoCollection(),
                 new Connect(),
                 registration,
-                new ConsoleUsersAuthorization(registration),
-                Executors.newFixedThreadPool(5)
+                new ConsoleUsersAuthorization(registration)
         );
         console.getStarted();
-
     }
 }

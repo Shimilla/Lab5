@@ -6,12 +6,10 @@ import Users.User;
 import java.sql.Connection;
 import java.util.Locale;
 import java.util.Scanner;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class ConsoleUsersAuthorization {
     private final Registration registration;
     private final ConsoleUserRegistation consoleUserRegistation;
-    private ReentrantLock reentrantLock = new ReentrantLock();
 
     public ConsoleUsersAuthorization(Registration registration) {
         this.registration = registration;
@@ -20,7 +18,6 @@ public class ConsoleUsersAuthorization {
 
     public User executeAuthorization(Scanner scanner, Connection connection) {
         ConsoleCreateUser consoleCreateUser = new ConsoleCreateUser();
-        reentrantLock.lock();
         while (true) {
             System.out.println("Authorization... \n");
             String login = consoleCreateUser.getCorrectLogin(scanner);
@@ -28,7 +25,6 @@ public class ConsoleUsersAuthorization {
                 System.out.println("Authentication... \n");
                 checkPass(login, scanner, consoleCreateUser);
                 User user = registration.getUserByLogin(login);
-                reentrantLock.unlock();
                 return user;
             }
             if (!registration.isRegistered(login)) {

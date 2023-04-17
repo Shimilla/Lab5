@@ -2,15 +2,12 @@ package fileManager;
 
 import DAO.DragonsDAO;
 import Users.User;
-import console.ConsoleCreateDragon;
 import dragon.CollectionManager;
 import dragon.Dragon;
 import dragon.DragonType;
 import dragon.DragonValidate;
-
 import java.io.*;
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.Locale;
 
 public class DataReader {

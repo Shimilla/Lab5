@@ -16,27 +16,11 @@ public class ConsoleModernizeCollection extends ConsoleCollectionBuilder {
         this.dragonsDAO = dragonsDAO;
     }
 
-//    public void consoleUpdateID(Scanner scanner) {
-//        int id = 0;
-//        try {
-//            if (super.getCollectionManager().getDragons().isEmpty()) {
-//                System.out.println("You cannot update an item by ID from an empty collection \n");
-//                return;
-//            }
-//            id = getID(scanner);
-//            getCollectionManager().update(id, new ConsoleCreateDragon(getCollectionManager(), dragonsDAO).createDragon(scanner));
-//        } catch (IndexOutOfBoundsException e) {
-//            System.out.printf("Element with an id=%d does not exist \n", id);
-//        }
-//    }
-
     public void consoleUpdateID(Scanner scanner, Connection connection, User user) {
         int id = 0;
         try {
-            //проверка на пустоту таблицы в БД
             if (!dragonsDAO.isEmptyTableByUser(connection, user)) {
                 id = getID(scanner);
-                // проверка на своих драконов
                 Dragon myDragon = getCollectionManager().getDragonById(id);
                 if (myDragon.getOwner().getId() == user.getId()) {
                     Dragon dragon;
@@ -57,24 +41,9 @@ public class ConsoleModernizeCollection extends ConsoleCollectionBuilder {
         }
     }
 
-//    public void consoleRemoveID(Scanner scanner) {
-//        int id = 0;
-//        try {
-//            if (super.getCollectionManager().getDragons().isEmpty()) {
-//                System.out.println("You cannot remove an item by ID from an empty collection \n");
-//                return;
-//            }
-//            id = getID(scanner);
-//            getCollectionManager().remove_by_id(id);
-//        } catch (IndexOutOfBoundsException e) {
-//            System.out.printf("Element with an id=%d does not exist \n", id);
-//        }
-//    }
-
     public void consoleRemoveID(Scanner scanner, Connection connection, User user) {
         int id = 0;
         try {
-            //проверка на пустоту таблицы в БД
             if (!dragonsDAO.isEmptyTableByUser(connection, user)) {
                 id = getID(scanner);
                 Dragon myDragon = getCollectionManager().getDragonById(id);
@@ -95,20 +64,6 @@ public class ConsoleModernizeCollection extends ConsoleCollectionBuilder {
             System.out.printf("Element with an id=%d does not exist \n", id);
         }
     }
-
-//    public void consoleRemoveIndex(Scanner scanner) {
-//        int index = 0;
-//        try {
-//            if (super.getCollectionManager().getDragons().isEmpty()) {
-//                System.out.println("You cannot remove an item by index from an empty collection \n");
-//                return;
-//            }
-//            index = getIndex(scanner);
-//            getCollectionManager().remove_at(index);
-//        } catch (IndexOutOfBoundsException e) {
-//            System.out.printf("Element with an index=%d does not exist \n", index);
-//        }
-//    }
 
     public void consoleRemoveIndex(Scanner scanner, Connection connection, User user) {
         int index = 0;

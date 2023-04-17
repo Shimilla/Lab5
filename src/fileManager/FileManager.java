@@ -4,15 +4,9 @@ import DAO.DragonsDAO;
 import Users.User;
 import dragon.CollectionManager;
 import com.google.gson.Gson;
-import dragon.Dragon;
-
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
 
 public class FileManager {
     private final CollectionManager collectionManager;
@@ -76,28 +70,4 @@ public class FileManager {
             System.out.println("Hard exception \n");
         }
     }
-
-    public void readDateFile(File fileName) {
-        String fileGson = null;
-        String line;
-
-        try (FileReader fileReader = new FileReader(fileName.toString());
-             BufferedReader bufferedReader = new BufferedReader(fileReader)) {
-            while ((line = bufferedReader.readLine()) != null) {
-                fileGson = line;
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found, check path to file \n");
-        } catch (IOException ex) {
-            System.out.println("Hard exception \n");
-        }
-
-        Gson gson = new Gson();
-        Dragon[] dragons = gson.fromJson(fileGson, Dragon[].class);
-        List<Dragon> tempArr = Arrays.asList(dragons);
-        List<Dragon> dragonList = new ArrayList<>(tempArr);
-        collectionManager.initDragons(dragonList);
-        collectionManager.initIdCollection();
-    }
-
 }

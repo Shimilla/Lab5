@@ -2,16 +2,12 @@ package DAO;
 
 import Users.User;
 import dragon.Dragon;
-
 import java.sql.*;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class DragonsDAO {
     private PreparedStatement preparedStatement;
-    private ReentrantLock reentrantLock = new ReentrantLock();
 
     public boolean insertDragon(Dragon dragon, Connection connection) {
-        reentrantLock.lock();
         try {
             String sql = "INSERT INTO Dragons (name, age, weight, dragon_type, owner_id) VALUES (?, ?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(sql);
@@ -22,42 +18,6 @@ public class DragonsDAO {
             preparedStatement.setInt(5, dragon.getOwner().getId());
             preparedStatement.executeUpdate();
             return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            reentrantLock.unlock();
-        }
-        return true;
-    }
-
-    public void selectDragons(Connection connection) {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM Dragons");
-            while (resultSet.next()) {
-                System.out.println("id: " + resultSet.getInt("id"));
-                System.out.println("name: " + resultSet.getString("name"));
-                System.out.println("age: " + resultSet.getString("age"));
-                System.out.println("weight: " + resultSet.getString("weight"));
-                System.out.println("dragon_type " + resultSet.getString("dragon_type"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public boolean isEmptyTable(Connection connection) {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT Count(*) FROM Dragons");
-            while (resultSet.next()) {
-                if (resultSet.getInt("count") == 0) {
-                    System.out.println("The table has no records \n");
-                    return true;
-                } else {
-                    return false;
-                }
-            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

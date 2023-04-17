@@ -3,8 +3,6 @@ package console;
 import Users.User;
 import dragon.CollectionManager;
 import dragon.DragonType;
-import dragon.DragonValidate;
-
 import java.util.Locale;
 import java.util.Scanner;
 

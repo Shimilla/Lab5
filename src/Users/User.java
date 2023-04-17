@@ -1,6 +1,5 @@
 package Users;
 
-import com.google.common.hash.HashCode;
 import dragon.CollectionManager;
 import dragon.Dragon;
 

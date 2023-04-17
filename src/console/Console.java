@@ -6,16 +6,9 @@ import Users.Registration;
 import Users.User;
 import dragon.*;
 import util.printInfoCollection;
-
 import java.sql.Connection;
 import java.util.Locale;
 import java.util.Scanner;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-
-import Callable.*;
 
 public class Console {
     private static boolean isWork = false;
@@ -27,7 +20,6 @@ public class Console {
     private final Connect connect;
     private final Registration registration;
     private final ConsoleUsersAuthorization consoleUsersAuthorization;
-    private final ExecutorService executorService;
 
     public Console(CollectionManager collectionManager,
                    ConsoleCreateDragon consoleCreateDragon,
@@ -36,8 +28,7 @@ public class Console {
                    printInfoCollection printInfoCollection,
                    Connect connect,
                    Registration registration,
-                   ConsoleUsersAuthorization consoleUsersAuthorization,
-                   ExecutorService executorService) {
+                   ConsoleUsersAuthorization consoleUsersAuthorization) {
 
         this.collectionManager = collectionManager;
         this.consoleCreateDragon = consoleCreateDragon;
@@ -47,75 +38,36 @@ public class Console {
         this.connect = connect;
         this.registration = registration;
         this.consoleUsersAuthorization = consoleUsersAuthorization;
-        this.executorService = executorService;
-    }
-
-    private Connection getConnect() {
-        ConnectCall connectCall = new ConnectCall(connect);
-        Future<Connection> connectionFuture = executorService.submit(connectCall);
-        try {
-            Connection connection = connectionFuture.get();
-            if (connection != null) {
-                return connection;
-            }
-        } catch (InterruptedException | ExecutionException e) {
-            System.out.println("Thread interruption \n");
-        }
-        return null;
-    }
-
-    private User getUser(Scanner scanner, Connection connection) {
-        try {
-            UserCall userCall = new UserCall(consoleUsersAuthorization, scanner, connection);
-            Future<User> userFuture = executorService.submit(userCall);
-            User user = userFuture.get();
-            if (user != null) {
-                return userFuture.get();
-            }
-        } catch (InterruptedException | ExecutionException e) {
-            System.out.println("Thread interruption \n");
-        }
-        return null;
-    }
-
-    private void getCashDragons(CashLoader cashLoader, Connection connection) {
-        executorService.submit(() -> cashLoader.getCashDragons(collectionManager, connection));
-    }
-
-    private void getCashUsers(CashLoader cashLoader, Registration registration, Connection connection) {
-        executorService.submit(() -> cashLoader.getCashUsers(registration, connection));
     }
 
     public void getStarted() {
         isWork = true;
         Scanner scanner = new Scanner(System.in);
         CashLoader cashLoader = new CashLoader();
-        Connection connection = getConnect();
-        getCashDragons(cashLoader, connection);
-        getCashUsers(cashLoader, registration, connection);
-        User user = getUser(scanner, connection);
+        Connection connection = connect.getConnect();
+        cashLoader.getCashDragons(collectionManager, connection);
+        cashLoader.getCashUsers(registration, connection);
+        User user = consoleUsersAuthorization.executeAuthorization(scanner, connection);
         collectionManager.help();
-        chooseMethod(scanner, connection, user, executorService);
-        executorService.shutdown();
-
+        chooseMethod(scanner, connection, user);
     }
 
-    private void chooseMethod(Scanner scanner, Connection connection, User user, ExecutorService executorService) {
+    private void chooseMethod(Scanner scanner, Connection connection, User user) {
         while (isWork) {
             System.out.println("Enter one of the available commands \n");
             String method = scanner.nextLine().trim();
             switch (method.toLowerCase(Locale.ROOT)) {
                 case "help" -> collectionManager.help();
                 case "info" -> {
-                    executorService.submit(collectionManager::info);
+                    collectionManager.info();
                     printInfoCollection.pressEnter();
                 }
                 case "show" -> {
-                    executorService.submit(collectionManager::show);
+                    collectionManager.show();
                     printInfoCollection.pressEnter();
                 }
                 case "add" -> {
-                    consoleCreateDragon.addDragon(scanner, connection, user, executorService);
+                    consoleCreateDragon.addDragon(scanner, connection, user);
                     printInfoCollection.pressEnter();
                 }
                 case "exit" -> exit();

@@ -7,15 +7,11 @@ import dragon.Dragon;
 import dragon.DragonType;
 
 import java.sql.*;
-import java.util.concurrent.Future;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class CashLoader {
-    private ReentrantLock reentrantLock = new ReentrantLock();
 
     public void getCashDragons(CollectionManager collectionManager, Connection connection) {
         try {
-            reentrantLock.lock();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM dragons LEFT JOIN users ON dragons.owner_id = users.user_id");
             while (resultSet.next()) {
@@ -31,13 +27,10 @@ public class CashLoader {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            reentrantLock.unlock();
         }
     }
 
     public void getCashUsers(Registration registration, Connection connection) {
-        reentrantLock.lock();
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM users");
@@ -52,8 +45,6 @@ public class CashLoader {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            reentrantLock.unlock();
         }
     }
 
